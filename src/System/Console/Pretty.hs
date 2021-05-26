@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                  #-}
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE TypeSynonymInstances #-}
@@ -54,12 +55,20 @@ class Pretty a where
 -- | Instance of `Pretty` for `T.Text`
 instance Pretty T.Text where
   colorize section col str =
+#if defined(IS_WINDOWS)
+    "`e[" <>                                  -- escape code
+#else
     "\x1b[" <>                                  -- escape code
+#endif
     sectionNum <>                               -- bg/foreground
     (T.singleton $ C.intToDigit $ fromEnum col) -- color code
     <> "m" <>                                   -- delim
     str <>                                      -- inner string
+#if defined(IS_WINDOWS)
+    "`e[0m"                                   -- reset
+#else
     "\x1b[0m"                                   -- reset
+#endif
     where
       sectionNum :: T.Text
       sectionNum = case section of
@@ -67,11 +76,19 @@ instance Pretty T.Text where
         Background -> "4"
 
   style sty str =
+#if defined(IS_WINDOWS)
+    "`e[" <>                                  -- escape code
+#else
     "\x1b[" <>                                  -- escape code
+#endif
     (T.singleton $ C.intToDigit $ fromEnum sty) -- style
     <> "m" <>                                   -- delim
     str <>                                      -- inner string
+#if defined(IS_WINDOWS)
+    "`e[0m"                                   -- reset
+#else
     "\x1b[0m"                                   -- reset
+#endif
 
 ---------------------------------------------------------------------------------
 -- STRING
@@ -79,12 +96,20 @@ instance Pretty T.Text where
 -- | Instance of `Pretty` for `String`
 instance Pretty String where
   colorize section col str =
+#if defined(IS_WINDOWS)
+    "`e[" <>                                  -- escape code
+#else
     "\x1b[" <>          -- escape code
+#endif
     sectionNum <>       -- bg/foreground
     show (fromEnum col) -- color code
     <> "m" <>           -- delim
     str <>              -- inner string
+#if defined(IS_WINDOWS)
+    "`e[0m"                                   -- reset
+#else
     "\x1b[0m"           -- reset
+#endif
     where
       sectionNum :: String
       sectionNum = case section of
@@ -92,11 +117,19 @@ instance Pretty String where
         Background -> "4"
 
   style sty str =
+#if defined(IS_WINDOWS)
+    "`e[" <>                                  -- escape code
+#else
     "\x1b[" <>             -- escape code
+#endif
     show (fromEnum sty)    -- style
     <> "m" <>              -- delim
     str <>                 -- string
+#if defined(IS_WINDOWS)
+    "`e[0m"                                   -- reset
+#else
     "\x1b[0m"              -- reset
+#endif
 
 
 ---------------------------------------------------------------------------------

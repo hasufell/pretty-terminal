@@ -1,0 +1,55 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           pretty-terminal
+version:        0.1.0.0
+synopsis:       Styling and coloring terminal output with ANSI escape sequences.
+description:    Please see the README on Github at <https://github.com/loganmac/pretty-terminal#readme>
+category:       Terminal
+homepage:       https://github.com/loganmac/pretty-terminal#readme
+bug-reports:    https://github.com/loganmac/pretty-terminal/issues
+author:         Logan McPhail
+maintainer:     logan.airnomad@gmail.com
+copyright:      2018 Logan McPhail
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/loganmac/pretty-terminal
+
+library
+  exposed-modules:
+      System.Console.Pretty
+  other-modules:
+      Paths_pretty_terminal
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wincomplete-record-updates -Wincomplete-uni-patterns -Wtabs
+  build-depends:
+      base >=4.7 && <5
+    , text
+  default-language: Haskell2010
+
+  if os(windows)
+    cpp-options:   -DIS_WINDOWS
+
+executable example
+  main-is: Main.hs
+  other-modules:
+      Paths_pretty_terminal
+  hs-source-dirs:
+      examples
+  ghc-options: -Wall -Wincomplete-record-updates -Wincomplete-uni-patterns -Wtabs -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , pretty-terminal
+    , text
+  default-language: Haskell2010
